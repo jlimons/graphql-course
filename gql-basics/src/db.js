@@ -19,7 +19,7 @@ const posts = [{
   id: '11',
   title: 'Post 1',
   body: '2@1.com',
-  published: false,
+  published: true,
   author: '1'
 },{
   id: '12',
