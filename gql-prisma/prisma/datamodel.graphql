@@ -1,21 +1,35 @@
-type User {
-  id: ID! @unique
+type User @db(name: "user") {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   name: String!
   email: String! @unique
-  posts: [Post!]!
+  role: Role! @default(value: USER)
+  posts: [Post!]! @relation(name: "PostToUser", onDelete: CASCADE)
+  comments: [Comment!]! @relation(name: "CommentToUser", onDelete: CASCADE)
 }
 
-type Post {
-  id: ID! @unique
+type Post @db(name: "post") {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   title: String!
   body: String!
-  published: Boolean!
-  author: User!
+  published: Boolean! @default(value: false)
+  author: User! @relation(name: "PostToUser", onDelete: SET_NULL)
+  comments: [Comment!]! @relation(name: "CommentToPost", onDelete: CASCADE)
 }
 
-type Comment {
-  id: ID! @unique
+type Comment @db(name: "comment") {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   text: String!
-  author: User!
-  post: Post!
+  author: User! @relation(name: "CommentToUser", onDelete: SET_NULL)
+  post: Post! @relation(name: "CommentToPost", onDelete: SET_NULL)
+}
+
+enum Role {
+  USER
+  ADMIN
 }
